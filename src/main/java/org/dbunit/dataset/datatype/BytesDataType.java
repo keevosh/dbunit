@@ -34,9 +34,12 @@ import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import org.dbunit.dataset.ITable;
+import org.dbunit.ext.postgresql.UuidType;
 import org.dbunit.util.Base64;
+import org.dbunit.util.UuidHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,6 +117,15 @@ public class BytesDataType extends AbstractDataType
                 return Base64.decode((String)value);
             }
 
+            // Assume that the String is a UUID
+            try {
+                UUID uuid = UUID.fromString(stringValue);
+                return UuidHelper.timeUuidToBytes(uuid);
+            }
+            catch(Exception e) {
+                
+            }
+            
             try
             {
             	logger.debug("Assuming given string to be a URI");
