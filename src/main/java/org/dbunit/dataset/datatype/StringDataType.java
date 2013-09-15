@@ -29,6 +29,7 @@ import java.sql.SQLException;
 
 import org.dbunit.dataset.ITable;
 import org.dbunit.util.Base64;
+import org.dbunit.util.UuidHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +95,12 @@ public class StringDataType extends AbstractDataType
 
         if (value instanceof byte[])
         {
-            return Base64.encodeBytes((byte[])value);
+            try {
+                return UuidHelper.timeUuidFromBytes((byte[])value).toString();
+            }
+            catch(Exception e) {
+                return Base64.encodeBytes((byte[])value);                
+            }
         }
 
         if (value instanceof Blob)
